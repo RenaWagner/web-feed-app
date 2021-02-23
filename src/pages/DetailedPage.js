@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Likes from "../components/Likes";
+import Comments from "../components/Comments";
 
 const axios = require("axios");
 
@@ -8,7 +10,7 @@ export default function DetailedPage() {
 
   const route_parameters = useParams();
   const id = route_parameters.id;
-  console.log(id);
+  //   console.log(id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +65,38 @@ export default function DetailedPage() {
       return article;
     }
   });
-  console.log(article[0]);
+  //   console.log(article[0]);
+
+  const incrementLikes = (id) => {
+    // console.log("incrementing likes!");
+    const newArticleDataWithLikes = articlesData.map((article) => {
+      if (id == article.id) {
+        return {
+          ...article,
+          likes: article.likes + 1,
+        };
+      } else {
+        return article;
+      }
+    });
+    // console.log(newArticleDataWithLikes);
+    set_articlesData(newArticleDataWithLikes);
+  };
+
+  const submitComment = (comment, id) => {
+    const commentAddedData = articlesData.map((article) => {
+      if (id == article.id) {
+        return {
+          ...article,
+          comments: [...article.comments, comment],
+        };
+      } else {
+        return article;
+      }
+    });
+    set_articlesData(commentAddedData);
+    // console.log(comment, id);
+  };
 
   return (
     <div>
@@ -72,20 +105,32 @@ export default function DetailedPage() {
           <h2>{article[0].title}</h2>
           <img src={article[0].img} style={{ width: 500 }} />
           <p>
-            Author: {article[0].writer} Date: {article[0].date}
+            Author:{" "}
+            <span className="font-weight-bold">{article[0].writer}</span> Date:{" "}
+            <span className="font-weight-bold">{article[0].date}</span>
           </p>
           <p>
-            Likes: {article[0].likes} Comments: {article[0].comments.length}
+            <span className="bg-success text-white font-weight-bold p-2">
+              Likes: {article[0].likes}
+            </span>{" "}
+            <span className="bg-info text-white font-weight-bold p-2">
+              Comments: {article[0].comments.length}
+            </span>
           </p>
-          <p>{article[0].content}</p>
-          <p>Comments from readers: </p>
-          <ul className="list-group">
+          <p style={{ width: 500, margin: "auto" }}>{article[0].content}</p>
+          <p className="mt-5 mb-1">Comments from readers: </p>
+          <ul
+            style={{ width: 500, margin: "auto" }}
+            className="list-group list-group-flush w-75 p-3"
+          >
             {article[0].comments.map((comment, index) => (
               <li className="list-group-item" key={index}>
                 {comment}
               </li>
             ))}
           </ul>
+          <Likes articleId={article[0].id} incrementLikes={incrementLikes} />
+          <Comments articleId={article[0].id} submitComment={submitComment} />
         </div>
       )}
     </div>

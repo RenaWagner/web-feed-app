@@ -2,18 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function ArticleCard(props) {
-  const [comment, set_comment] = useState("");
-
-  const onClickIncrementLikes = () => {
-    props.incrementLikes(props.articleId);
-    // console.log(props.articleId);
-  };
-
-  const onClickCommentSubmit = () => {
-    props.submitComment(comment, props.articleId);
-    set_comment("");
-  };
-
   return (
     <div>
       <img
@@ -36,26 +24,10 @@ export default function ArticleCard(props) {
           Comments: {props.commentsNumber}
         </span>
       </p>
-      <p>{`${props.content.substring(0, 200)}...`}</p>
-      <button
-        className="btn btn-outline-success"
-        onClick={onClickIncrementLikes}
-      >
-        Like
-      </button>
-      <p>Leave your comments:</p>
-      <textarea
-        type="text"
-        cols="50"
-        rows="2"
-        value={comment}
-        onChange={(event) => set_comment(event.target.value)}
-      />
-      <p>
-        <button className="btn btn-outline-info" onClick={onClickCommentSubmit}>
-          Submit
-        </button>
-      </p>
+      <p
+        className="mb-5"
+        style={{ width: 500, margin: "auto" }}
+      >{`${props.content.substring(0, 200)}...`}</p>
     </div>
   );
 }
